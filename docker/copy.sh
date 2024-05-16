@@ -13,6 +13,7 @@ usage() {
 
 # copy html
 echo "begin copy html "
+rm -rf ./nginx/html/dist/**
 cp -r ../../RuoYi-Vue3/dist/** ./nginx/html/dist
 
 # copy jar
