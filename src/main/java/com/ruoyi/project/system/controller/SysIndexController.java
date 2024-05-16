@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,7 @@ public class SysIndexController
     /**
      * 访问首页，提示语
      */
+    @ApiOperation("访问首页，提示语")
     @RequestMapping("/")
     public String index()
     {

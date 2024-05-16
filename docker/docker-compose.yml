@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  ruoyi-mysql:
+    container_name: ruoyi-mysql
+    image: mysql:8.4
+    build:
+      context: ./mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - network-ruoyi
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d
+      - ./mysql/logs:/logs
+      - ./mysql/data:/var/lib/mysql
+    command: [
+          'mysqld',
+          '--innodb-buffer-pool-size=80M',
+          '--character-set-server=utf8mb4',
+          '--collation-server=utf8mb4_unicode_ci',
+          '--default-time-zone=+8:00',
+          '--lower-case-table-names=1'
+        ]
+    environment:
+      MYSQL_DATABASE: 'ry-vue'
+      MYSQL_ROOT_PASSWORD: password
+  ruoyi-redis:
+    container_name: ruoyi-redis
+    image: redis
+    build:
+      context: ./redis
+    ports:
+      - "6379:6379"
+    networks:
+      - network-ruoyi
+    volumes:
+      - ./redis/conf/redis.conf:/home/ruoyi/redis/redis.conf
+      - ./redis/data:/data
+    command: redis-server /home/ruoyi/redis/redis.conf
+  ruoyi-nginx:
+    container_name: ruoyi-nginx
+    image: nginx
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+    networks:
+      - network-ruoyi
+    volumes:
+      - ./nginx/html/dist:/home/ruoyi/projects/ruoyi-ui
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - ruoyi
+    links:
+      - ruoyi
+  ruoyi:
+    container_name: ruoyi
+    build:
+      context: ./ruoyi
+      dockerfile: dockerfile
+    ports:
+      - "9080:8080"
+    networks:
+      - network-ruoyi
+    environment:
+      - SPRING_DATASOURCE_DRUID_MASTER_URL=jdbc:mysql://ruoyi-mysql:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      - SPRING_DATASOURCE_DRUID_MASTER_USERNAME=root
+      - SPRING_DATASOURCE_DRUID_MASTER_PASSWORD=password
+      - SPRING_REDIS_HOST=ruoyi-redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_DATABASE=0
+      - SPRING_REDIS_PASSWORD=
+    volumes:
+      - ./ruoyi/uploadPath:/home/ruoyi/projects/uploadPath
+      - ./ruoyi/jar/ruoyi.jar:/home/ruoyi/ruoyi.jar
+    depends_on:
+      - ruoyi-redis
+    links:
+      - ruoyi-redis
+
+networks:
+  network-ruoyi:
+    driver: bridge
+    external: true

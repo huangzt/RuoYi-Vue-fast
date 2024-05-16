@@ -1,5 +1,6 @@
 package com.ruoyi.project.system.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,8 @@ public class SysRegisterController extends BaseController
 
     @Autowired
     private ISysConfigService configService;
-
+    
+    @ApiOperation("用户注册")
     @PostMapping("/register")
     public AjaxResult register(@RequestBody RegisterBody user)
     {

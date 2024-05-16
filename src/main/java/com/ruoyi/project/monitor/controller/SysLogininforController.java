@@ -2,6 +2,8 @@ package com.ruoyi.project.monitor.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +36,8 @@ public class SysLogininforController extends BaseController
 
     @Autowired
     private SysPasswordService passwordService;
-
+    
+    @ApiOperation("登录日志列表")
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysLogininfor logininfor)
@@ -43,7 +46,8 @@ public class SysLogininforController extends BaseController
         List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
         return getDataTable(list);
     }
-
+    
+    @ApiOperation("登录日志导出")
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
@@ -53,7 +57,8 @@ public class SysLogininforController extends BaseController
         ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
         util.exportExcel(response, list, "登录日志");
     }
-
+    
+    @ApiOperation("批量删除系统登录日志")
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
@@ -61,7 +66,8 @@ public class SysLogininforController extends BaseController
     {
         return toAjax(logininforService.deleteLogininforByIds(infoIds));
     }
-
+    
+    @ApiOperation("清空系统登录日志")
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
@@ -70,7 +76,8 @@ public class SysLogininforController extends BaseController
         logininforService.cleanLogininfor();
         return success();
     }
-
+    
+    @ApiOperation("账户解锁")
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")
