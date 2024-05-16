@@ -11,6 +11,8 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 #elseif($table.tree)
 import com.ruoyi.framework.web.domain.TreeEntity;
 #end
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * ${functionName}对象 ${tableName}
@@ -23,6 +25,7 @@ import com.ruoyi.framework.web.domain.TreeEntity;
 #elseif($table.tree)
 #set($Entity="TreeEntity")
 #end
+@ApiModel(value = "${ClassName}", description = "${functionName}")
 public class ${ClassName} extends ${Entity}
 {
     private static final long serialVersionUID = 1L;
@@ -30,6 +33,7 @@ public class ${ClassName} extends ${Entity}
 #foreach ($column in $columns)
 #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
+    @ApiModelProperty(value = "$column.columnComment")
 #if($column.list)
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)

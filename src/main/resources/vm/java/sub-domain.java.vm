@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * ${subTable.functionName}对象 ${subTableName}
@@ -14,6 +16,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
  * @author ${author}
  * @date ${datetime}
  */
+@ApiModel(value = "${subClassName}", description = "${subTable.functionName}")
 public class ${subClassName} extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -21,6 +24,7 @@ public class ${subClassName} extends BaseEntity
 #foreach ($column in $subTable.columns)
 #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
+    @ApiModelProperty(value = "$column.columnComment")
 #if($column.list)
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
