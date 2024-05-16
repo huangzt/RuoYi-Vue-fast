@@ -73,6 +73,7 @@ services:
       - SPRING_REDIS_PORT=6379
       - SPRING_REDIS_DATABASE=0
       - SPRING_REDIS_PASSWORD=
+      - RUOYI_PROFILE=/home/ruoyi/projects/uploadPath
     volumes:
       - ./ruoyi/uploadPath:/home/ruoyi/projects/uploadPath
       - ./ruoyi/jar/ruoyi.jar:/home/ruoyi/ruoyi.jar
